@@ -5,6 +5,7 @@ import numpy as np
 from to_dictionary import to_dictionary
 import os
 import cv2
+from tqdm import tqdm
 #dict_1 = to_dictionary('../char_std_5990.txt', 'gbk')
 #dict_2 = to_dictionary('../text_info_results.txt', 'utf-8')
 #dict_3 = to_dictionary('info.txt', 'utf-8')
@@ -146,12 +147,12 @@ if __name__ == '__main__':
         info_str = ''.join(info_list)
 
     # 图片标签
-    file  = open('data_set/val_set.txt', 'w', encoding='utf-8')
-    total = 1000
-    for num in range(0,total):
-        main('data_set/val_set/', num, file)
-        if num % 1000 == 0:
-            print('[%d/%d]'%(num,total))
+    file  = open('data_set/train_set.txt', 'w', encoding='utf-8')
+    total = 1000000
+    for num in tqdm(range(0,total)):
+        main('data_set/train_set/', num, file)
+        # if num % 1000 == 0:
+            # print('[%d/%d]'%(num,total))
     file.close()
 
 
