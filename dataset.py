@@ -135,3 +135,14 @@ class alignCollate(object):
         images = torch.cat([t.unsqueeze(0) for t in images], 0)
 
         return images, labels
+
+if __name__ == "__main__":
+    data_root = 'to_lmdb/lmdb'
+    dataset = lmdbDataset(root=data_root)
+    dataloader = torch.utils.data.DataLoader(
+        dataset, batch_size=1, shuffle=True, num_workers=2,
+        collate_fn=alignCollate()
+    )
+    for images, labels in dataloader:
+        print(images.size())
+        print(labels)

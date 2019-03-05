@@ -25,7 +25,7 @@ def checkImageIsValid(imageBin):
 def writeCache(env, cache):
     with env.begin(write=True) as txn:
         for k, v in cache.items():
-            txn.put(k, v)
+            txn.put(str(k).encode(), str(v).encode())
 			
 def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkValid=True):
     """
@@ -49,9 +49,9 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
         print(label)
         # if not os.path.exists(imagePath):
         #     print('%s does not exist' % imagePath)
-        #     continue	
-		
-        with open('.'+imagePath, 'r') as f:
+        #     continue
+
+        with open(imagePath, 'rb') as f:
             imageBin = f.read()
 
 
