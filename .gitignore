@@ -1,4 +1,5 @@
 __pycache__
-exp
+expr
 lmdb
 data_generator
+*.pyc

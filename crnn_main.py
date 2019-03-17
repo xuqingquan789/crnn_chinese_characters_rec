@@ -18,7 +18,6 @@ import params
 parser = argparse.ArgumentParser()
 parser.add_argument('--trainroot', required=True, help='path to dataset')
 parser.add_argument('--valroot', required=True, help='path to dataset')
-parser.add_argument('--cuda', action='store_true', help='enables cuda')
 
 opt = parser.parse_args()
 print(opt)
@@ -96,10 +95,9 @@ def trainBatch(net, criterion, optimizer, train_iter):
     optimizer.step()
     return cost
 def training():
-    for total_steps in range(params.niter):
+    for epoch in range(params.nEpochs):
         train_iter = iter(train_loader)
         i = 0
-        print(len(train_loader))
         while i < len(train_loader):
             for p in crnn.parameters():
                 p.requires_grad = True
@@ -109,12 +107,13 @@ def training():
             i += 1
             if i % params.displayInterval == 0:
                 print('[%d/%d][%d/%d] Loss: %f' %
-                      (total_steps, params.niter, i, len(train_loader), loss_avg.val()))
+                      (epoch, params.nEpochs, i, len(train_loader), loss_avg.val()))
                 loss_avg.reset()
             if i % params.valInterval == 0:
                 val(crnn, test_dataset, criterion)
-        if (total_steps+1) % params.saveInterval == 0:
-            torch.save(crnn.state_dict(), '{0}/crnn_Rec_done_{1}_{2}.pth'.format(params.experiment, total_steps, i))
+        if (epoch+1) % params.saveEpoch == 0:
+            torch.save(crnn.state_dict(), '{0}/crnn_Rec_done_{1}_{2}.pth'.format(params.experiment, epoch, i))
+            print('Saved model params in dir {}'.format(params.experiment))
 
 if __name__ == '__main__':
 
@@ -125,8 +124,8 @@ if __name__ == '__main__':
     cudnn.benchmark = True
     
     # store model path
-    if not os.path.exists('./expr'):
-        os.mkdir('./expr')
+    if not os.path.exists(params.experiment):
+        os.mkdir(parmas.experiment)
 
     # read train set
     train_dataset = dataset.lmdbDataset(root=opt.trainroot)
@@ -160,7 +159,7 @@ if __name__ == '__main__':
     length = torch.IntTensor(params.batchSize)
 
     crnn = crnn.CRNN(params.imgH, nc, nclass, params.nh)
-    if opt.cuda:
+    if torch.cuda.is_available():
         crnn.cuda()
         image = image.cuda()
         criterion = criterion.cuda()

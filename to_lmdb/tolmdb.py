@@ -25,7 +25,8 @@ def checkImageIsValid(imageBin):
 def writeCache(env, cache):
     with env.begin(write=True) as txn:
         for k, v in cache.items():
-            txn.put(str(k).encode(), str(v).encode())
+            # txn.put(str(k).encode(), str(v).encode())
+            txn.put(k, v)
 			
 def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkValid=True):
     """
@@ -51,7 +52,7 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
         #     print('%s does not exist' % imagePath)
         #     continue
 
-        with open(imagePath, 'rb') as f:
+        with open('../data_generator/data_set/'+ imagePath, 'rb') as f:
             imageBin = f.read()
 
 
@@ -79,8 +80,8 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
 	
 
 if __name__ == '__main__':
-    outputPath = "./lmdb"
-    imgdata = open("./train.txt")
+    outputPath = "../data_generator/data_set/train_lmdb"
+    imgdata = open("../data_generator/data_set/train_set.txt")
     imagePathList = list(imgdata)
     
     labelList = []
