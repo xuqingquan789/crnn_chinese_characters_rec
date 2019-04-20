@@ -66,8 +66,8 @@ def val(net, dataset, criterion, max_iter=1000):
         for indx, (pred, target) in enumerate(zip(sim_preds, list_1)):
             if pred == target:
                 n_correct += 1
-            else:
-                print("{} pred:{} => label:{}".format(indx, pred, target))
+            # else:
+                # print("{} pred:{} => label:{}".format(indx, pred, target))
 
     """ 
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:params.n_test_disp]
@@ -116,6 +116,8 @@ def training():
         if (epoch+1) % params.saveEpoch == 0:
             torch.save(crnn.state_dict(), '{0}/crnn_Rec_done_{1}_{2}.pth'.format(params.experiment, epoch, i))
             print('Saved model params in dir {}'.format(params.experiment))
+            val(crnn, test_dataset, criterion)
+
 
 if __name__ == '__main__':
 
