@@ -14,14 +14,14 @@ import dataset
 import models.crnn as crnn
 import re
 import params
-
+"""
 parser = argparse.ArgumentParser()
 parser.add_argument('--trainroot', required=True, help='path to dataset')
 parser.add_argument('--valroot', required=True, help='path to dataset')
 
 opt = parser.parse_args()
 print(opt)
-
+"""
 # custom weights initialization called on crnn
 def weights_init(m):
     classname = m.__class__.__name__
@@ -43,7 +43,6 @@ def val(net, dataset, criterion, max_iter=100):
     i = 0
     n_correct = 0
     loss_avg = utils.averager()
-
     max_iter = min(max_iter, len(data_loader))
     for i in range(max_iter):
         data = val_iter.next()
@@ -64,9 +63,11 @@ def val(net, dataset, criterion, max_iter=100):
         list_1 = []
         for i in cpu_texts:
             list_1.append(i.decode('utf-8', 'strict'))
-        for pred, target in zip(sim_preds, list_1):
+        for indx, (pred, target) in enumerate(zip(sim_preds, list_1)):
             if pred == target:
                 n_correct += 1
+            else:
+                print("{} pred:{} => label:{}".format(indx, pred, target))
 
     
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:params.n_test_disp]
@@ -128,7 +129,7 @@ if __name__ == '__main__':
         os.mkdir(parmas.experiment)
 
     # read train set
-    train_dataset = dataset.lmdbDataset(root=opt.trainroot)
+    train_dataset = dataset.lmdbDataset(root=params.trainroot)
     assert train_dataset
     if not params.random_sample:
         sampler = dataset.randomSequentialSampler(train_dataset, params.batchSize)
@@ -141,11 +142,10 @@ if __name__ == '__main__':
         shuffle=True, sampler=sampler,
         num_workers=int(params.workers),
         collate_fn=dataset.alignCollate(imgH=params.imgH, imgW=params.imgW, keep_ratio=params.keep_ratio))
-
     # read test set
     # images will be resize to 32*160
     test_dataset = dataset.lmdbDataset(
-        root=opt.valroot, transform=dataset.resizeNormalize((160, 32)))
+        root=params.valroot, transform=dataset.resizeNormalize((160, 32)))
 
     nclass = len(params.alphabet) + 1
     nc = 1

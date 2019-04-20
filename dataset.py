@@ -29,7 +29,8 @@ class lmdbDataset(Dataset):
             sys.exit(0)
 
         with self.env.begin(write=False) as txn:
-
+            # import ipdb;ipdb.set_trace()
+            print(root)
             str = 'num-samples'
             nSamples = int(txn.get(str.encode()))
             self.nSamples = nSamples

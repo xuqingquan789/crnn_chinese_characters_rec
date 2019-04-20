@@ -1,5 +1,9 @@
 import alphabets
 
+trainroot = '/workspace/xqq/crnn_zh/data_generator/data_set/train_lmdb'
+valroot = '/workspace/xqq/crnn_zh/data_generator/data_set/val_lmdb'
+restore_ckpt = './expr/weights/crnn_Rec_done_82_15625.pth'
+
 random_sample = True
 keep_ratio = False
 adam = False
