@@ -32,7 +32,7 @@ def weights_init(m):
         m.bias.data.fill_(0)
 
 
-def val(net, dataset, criterion, max_iter=100):
+def val(net, dataset, criterion, max_iter=1000):
     print('Start val')
     for p in crnn.parameters():
         p.requires_grad = False
@@ -69,14 +69,15 @@ def val(net, dataset, criterion, max_iter=100):
             else:
                 print("{} pred:{} => label:{}".format(indx, pred, target))
 
-    
+    """ 
     raw_preds = converter.decode(preds.data, preds_size.data, raw=True)[:params.n_test_disp]
     for raw_pred, pred, gt in zip(raw_preds, sim_preds, list_1):
         print('%-20s => %-20s, gt: %-20s' % (raw_pred, pred, gt))
+    """
 
     print(n_correct)
     print(max_iter*params.batchSize)
-    accuracy = n_correct / float(max_iter * params.batchSize)
+    accuracy = n_correct / len(data_loader.dataset)
     print('Test loss: %f, accuray: %f' % (loss_avg.val(), accuracy))
 
 
@@ -126,7 +127,7 @@ if __name__ == '__main__':
     
     # store model path
     if not os.path.exists(params.experiment):
-        os.mkdir(parmas.experiment)
+        os.mkdir(params.experiment)
 
     # read train set
     train_dataset = dataset.lmdbDataset(root=params.trainroot)

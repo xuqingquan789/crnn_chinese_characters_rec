@@ -52,7 +52,7 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
         #     print('%s does not exist' % imagePath)
         #     continue
 
-        with open('../data_generator/data_set/'+ imagePath, 'rb') as f:
+        with open(imagePath, 'rb') as f:
             imageBin = f.read()
 
 
@@ -80,8 +80,8 @@ def createDataset(outputPath, imagePathList, labelList, lexiconList=None, checkV
 	
 
 if __name__ == '__main__':
-    outputPath = "../data_generator/data_set/train_lmdb"
-    imgdata = open("../data_generator/data_set/train_set.txt")
+    outputPath = "/workspace/xqq/datasets/RCTW/val_lmdb"
+    imgdata = open("/workspace/xqq/datasets/RCTW/RCTW_valid.txt")
     imagePathList = list(imgdata)
     
     labelList = []
